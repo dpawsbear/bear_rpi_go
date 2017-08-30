@@ -43,14 +43,14 @@ const(
 	BCM2837_PERI_SIZE      uint32   = 0x01000000
 
 	//define the base of peripherals block
-    BCM2837_ST_BASE	   uint32 =  0x003000
-    BCM2837_GPIO_PADS  uint32 =  0x100000
-    BCM2837_CLOCK_BASE uint32 =  0x101000
-    BCM2837_GPIO_BASE  uint32 =  0x200000
-    BCM2837_SPI0_BASE  uint32 =  0x204000
-    BCM2837_BSC0_BASE  uint32 =  0x205000
-    BCM2837_GPIO_PWM   uint32 =  0x20C000
-    BCM2837_BSC1_BASE  uint32 =  0x804000
+	BCM2837_ST_BASE	   uint32 =  0x003000
+	BCM2837_GPIO_PADS  uint32 =  0x100000
+	BCM2837_CLOCK_BASE uint32 =  0x101000
+	BCM2837_GPIO_BASE  uint32 =  0x200000
+	BCM2837_SPI0_BASE  uint32 =  0x204000
+	BCM2837_BSC0_BASE  uint32 =  0x205000
+	BCM2837_GPIO_PWM   uint32 =  0x20C000
+	BCM2837_BSC1_BASE  uint32 =  0x804000
 
 	// register base
 	BCM2837_REGBASE_ST   = 1  /*!< Base of the ST (System Timer) registers. */
@@ -116,22 +116,22 @@ const(
 	BCM2837_GPIO_PUD_UP      = 0x02   /*!< Enable Pull Up control 0b10  */
 
 	/*! Pad control register offsets from BCM2835_GPIO_PADS */
-    BCM2837_PADS_GPIO_0_27          =     0x002c /*!< Pad control register for pads 0 to 27 */
-    BCM2837_PADS_GPIO_28_45         =     0x0030 /*!< Pad control register for pads 28 to 45 */
-    BCM2837_PADS_GPIO_46_53         =     0x0034 /*!< Pad control register for pads 46 to 53 */
+	BCM2837_PADS_GPIO_0_27          =     0x002c /*!< Pad control register for pads 0 to 27 */
+	BCM2837_PADS_GPIO_28_45         =     0x0030 /*!< Pad control register for pads 28 to 45 */
+	BCM2837_PADS_GPIO_46_53         =     0x0034 /*!< Pad control register for pads 46 to 53 */
 
-    /*! Pad Control masks */
-    BCM2837_PAD_PASSWRD             =     (0x5A << 24)  /*!< Password to enable setting pad mask */
-    BCM2837_PAD_SLEW_RATE_UNLIMITED =     0x10 /*!< Slew rate unlimited */
-    BCM2837_PAD_HYSTERESIS_ENABLED  =     0x08 /*!< Hysteresis enabled */
-    BCM2837_PAD_DRIVE_2mA           =     0x00 /*!< 2mA drive current */
-    BCM2837_PAD_DRIVE_4mA           =     0x01 /*!< 4mA drive current */
-    BCM2837_PAD_DRIVE_6mA           =     0x02 /*!< 6mA drive current */
-    BCM2837_PAD_DRIVE_8mA           =     0x03 /*!< 8mA drive current */
-    BCM2837_PAD_DRIVE_10mA          =     0x04 /*!< 10mA drive current */
-    BCM2837_PAD_DRIVE_12mA          =     0x05 /*!< 12mA drive current */
-    BCM2837_PAD_DRIVE_14mA          =     0x06 /*!< 14mA drive current */
-    BCM2837_PAD_DRIVE_16mA          =     0x07 /*!< 16mA drive current */
+	/*! Pad Control masks */
+	BCM2837_PAD_PASSWRD             =     (0x5A << 24)  /*!< Password to enable setting pad mask */
+	BCM2837_PAD_SLEW_RATE_UNLIMITED =     0x10 /*!< Slew rate unlimited */
+	BCM2837_PAD_HYSTERESIS_ENABLED  =     0x08 /*!< Hysteresis enabled */
+	BCM2837_PAD_DRIVE_2mA           =     0x00 /*!< 2mA drive current */
+	BCM2837_PAD_DRIVE_4mA           =     0x01 /*!< 4mA drive current */
+	BCM2837_PAD_DRIVE_6mA           =     0x02 /*!< 6mA drive current */
+	BCM2837_PAD_DRIVE_8mA           =     0x03 /*!< 8mA drive current */
+	BCM2837_PAD_DRIVE_10mA          =     0x04 /*!< 10mA drive current */
+	BCM2837_PAD_DRIVE_12mA          =     0x05 /*!< 12mA drive current */
+	BCM2837_PAD_DRIVE_14mA          =     0x06 /*!< 14mA drive current */
+	BCM2837_PAD_DRIVE_16mA          =     0x07 /*!< 16mA drive current */
 
 	//bcm 2837 pad group
 	BCM2837_PAD_GROUP_GPIO_0_27    = 0   /*!< Pad group for GPIO pads 0 to 27 */
@@ -168,40 +168,40 @@ const(
 
 
 	//define for spi
-    BCM2837_SPI0_CS                =     0x0000 /*!< SPI Master Control and Status */
-    BCM2837_SPI0_FIFO              =     0x0004 /*!< SPI Master TX and RX FIFOs */
-    BCM2837_SPI0_CLK               =     0x0008 /*!< SPI Master Clock Divider */
-    BCM2837_SPI0_DLEN              =     0x000c /*!< SPI Master Data Length */
-    BCM2837_SPI0_LTOH              =     0x0010 /*!< SPI LOSSI mode TOH */
-    BCM2837_SPI0_DC                =     0x0014 /*!< SPI DMA DREQ Controls */
+	BCM2837_SPI0_CS                =     0x0000 /*!< SPI Master Control and Status */
+	BCM2837_SPI0_FIFO              =     0x0004 /*!< SPI Master TX and RX FIFOs */
+	BCM2837_SPI0_CLK               =     0x0008 /*!< SPI Master Clock Divider */
+	BCM2837_SPI0_DLEN              =     0x000c /*!< SPI Master Data Length */
+	BCM2837_SPI0_LTOH              =     0x0010 /*!< SPI LOSSI mode TOH */
+	BCM2837_SPI0_DC                =     0x0014 /*!< SPI DMA DREQ Controls */
 
-    /* Register masks for SPI0_CS */
-    BCM2837_SPI0_CS_LEN_LONG       =     0x02000000 /*!< Enable Long data word in Lossi mode if DMA_LEN is set */
-    BCM2837_SPI0_CS_DMA_LEN        =     0x01000000 /*!< Enable DMA mode in Lossi mode */
-    BCM2837_SPI0_CS_CSPOL2         =     0x00800000 /*!< Chip Select 2 Polarity */
-    BCM2837_SPI0_CS_CSPOL1         =     0x00400000 /*!< Chip Select 1 Polarity */
-    BCM2837_SPI0_CS_CSPOL0         =     0x00200000 /*!< Chip Select 0 Polarity */
-    BCM2837_SPI0_CS_RXF            =     0x00100000 /*!< RXF - RX FIFO Full */
-    BCM2837_SPI0_CS_RXR            =     0x00080000 /*!< RXR RX FIFO needs Reading (full) */
-    BCM2837_SPI0_CS_TXD            =     0x00040000 /*!< TXD TX FIFO can accept Data */
-    BCM2837_SPI0_CS_RXD            =     0x00020000 /*!< RXD RX FIFO contains Data */
-    BCM2837_SPI0_CS_DONE           =     0x00010000 /*!< Done transfer Done */
-    BCM2837_SPI0_CS_TE_EN          =     0x00008000 /*!< Unused */
-    BCM2837_SPI0_CS_LMONO          =     0x00004000 /*!< Unused */
-    BCM2837_SPI0_CS_LEN            =     0x00002000 /*!< LEN LoSSI enable */
-    BCM2837_SPI0_CS_REN            =     0x00001000 /*!< REN Read Enable */
-    BCM2837_SPI0_CS_ADCS           =     0x00000800 /*!< ADCS Automatically Deassert Chip Select */
-    BCM2837_SPI0_CS_INTR           =     0x00000400 /*!< INTR Interrupt on RXR */
-    BCM2837_SPI0_CS_INTD           =     0x00000200 /*!< INTD Interrupt on Done */
-    BCM2837_SPI0_CS_DMAEN          =     0x00000100 /*!< DMAEN DMA Enable */
-    BCM2837_SPI0_CS_TA             =     0x00000080 /*!< Transfer Active */
-    BCM2837_SPI0_CS_CSPOL          =     0x00000040 /*!< Chip Select Polarity */
-    BCM2837_SPI0_CS_CLEAR          =     0x00000030 /*!< Clear FIFO Clear RX and TX */
-    BCM2837_SPI0_CS_CLEAR_RX       =     0x00000020 /*!< Clear FIFO Clear RX  */
-    BCM2837_SPI0_CS_CLEAR_TX       =     0x00000010 /*!< Clear FIFO Clear TX  */
-    BCM2837_SPI0_CS_CPOL           =     0x00000008 /*!< Clock Polarity */
-    BCM2837_SPI0_CS_CPHA           =     0x00000004 /*!< Clock Phase */
-    BCM2837_SPI0_CS_CS             =     0x00000003 /*!< Chip Select */
+	/* Register masks for SPI0_CS */
+	BCM2837_SPI0_CS_LEN_LONG       =     0x02000000 /*!< Enable Long data word in Lossi mode if DMA_LEN is set */
+	BCM2837_SPI0_CS_DMA_LEN        =     0x01000000 /*!< Enable DMA mode in Lossi mode */
+	BCM2837_SPI0_CS_CSPOL2         =     0x00800000 /*!< Chip Select 2 Polarity */
+	BCM2837_SPI0_CS_CSPOL1         =     0x00400000 /*!< Chip Select 1 Polarity */
+	BCM2837_SPI0_CS_CSPOL0         =     0x00200000 /*!< Chip Select 0 Polarity */
+	BCM2837_SPI0_CS_RXF            =     0x00100000 /*!< RXF - RX FIFO Full */
+	BCM2837_SPI0_CS_RXR            =     0x00080000 /*!< RXR RX FIFO needs Reading (full) */
+	BCM2837_SPI0_CS_TXD            =     0x00040000 /*!< TXD TX FIFO can accept Data */
+	BCM2837_SPI0_CS_RXD            =     0x00020000 /*!< RXD RX FIFO contains Data */
+	BCM2837_SPI0_CS_DONE           =     0x00010000 /*!< Done transfer Done */
+	BCM2837_SPI0_CS_TE_EN          =     0x00008000 /*!< Unused */
+	BCM2837_SPI0_CS_LMONO          =     0x00004000 /*!< Unused */
+	BCM2837_SPI0_CS_LEN            =     0x00002000 /*!< LEN LoSSI enable */
+	BCM2837_SPI0_CS_REN            =     0x00001000 /*!< REN Read Enable */
+	BCM2837_SPI0_CS_ADCS           =     0x00000800 /*!< ADCS Automatically Deassert Chip Select */
+	BCM2837_SPI0_CS_INTR           =     0x00000400 /*!< INTR Interrupt on RXR */
+	BCM2837_SPI0_CS_INTD           =     0x00000200 /*!< INTD Interrupt on Done */
+	BCM2837_SPI0_CS_DMAEN          =     0x00000100 /*!< DMAEN DMA Enable */
+	BCM2837_SPI0_CS_TA             =     0x00000080 /*!< Transfer Active */
+	BCM2837_SPI0_CS_CSPOL          =     0x00000040 /*!< Chip Select Polarity */
+	BCM2837_SPI0_CS_CLEAR          =     0x00000030 /*!< Clear FIFO Clear RX and TX */
+	BCM2837_SPI0_CS_CLEAR_RX       =     0x00000020 /*!< Clear FIFO Clear RX  */
+	BCM2837_SPI0_CS_CLEAR_TX       =     0x00000010 /*!< Clear FIFO Clear TX  */
+	BCM2837_SPI0_CS_CPOL           =     0x00000008 /*!< Clock Polarity */
+	BCM2837_SPI0_CS_CPHA           =     0x00000004 /*!< Clock Phase */
+	BCM2837_SPI0_CS_CS             =     0x00000003 /*!< Chip Select */
 
 	// set spi bit order
 	BCM2837_SPI_BIT_ORDER_LSBFIRST = 0  /*!< LSB First */
@@ -239,39 +239,39 @@ const(
 	BCM2837_SPI_CLOCK_DIVIDER_1     = 1        /*!< 1 = 262.144us = 3.814697260kHz, same as 0/65536 */
 
 	//I2C define
-    BCM2837_BSC_C 		=  0x0000 /*!< BSC Master Control */
-    BCM2837_BSC_S 		=  0x0004 /*!< BSC Master Status */
-    BCM2837_BSC_DLEN	=  0x0008 /*!< BSC Master Data Length */
-    BCM2837_BSC_A 		=  0x000c /*!< BSC Master Slave Address */
-    BCM2837_BSC_FIFO	=  0x0010 /*!< BSC Master Data FIFO */
-    BCM2837_BSC_DIV		=  0x0014 /*!< BSC Master Clock Divider */
-    BCM2837_BSC_DEL		=  0x0018 /*!< BSC Master Data Delay */
-    BCM2837_BSC_CLKT	=  0x001c /*!< BSC Master Clock Stretch Timeout */
+	BCM2837_BSC_C 		=  0x0000 /*!< BSC Master Control */
+	BCM2837_BSC_S 		=  0x0004 /*!< BSC Master Status */
+	BCM2837_BSC_DLEN	=  0x0008 /*!< BSC Master Data Length */
+	BCM2837_BSC_A 		=  0x000c /*!< BSC Master Slave Address */
+	BCM2837_BSC_FIFO	=  0x0010 /*!< BSC Master Data FIFO */
+	BCM2837_BSC_DIV		=  0x0014 /*!< BSC Master Clock Divider */
+	BCM2837_BSC_DEL		=  0x0018 /*!< BSC Master Data Delay */
+	BCM2837_BSC_CLKT	=  0x001c /*!< BSC Master Clock Stretch Timeout */
 
-     /* Register masks for BSC_C */
-    BCM2837_BSC_C_I2CEN   = 0x00008000 /*!< I2C Enable, 0 = disabled, 1 = enabled */
-    BCM2837_BSC_C_INTR    = 0x00000400 /*!< Interrupt on RX */
-    BCM2837_BSC_C_INTT 	  = 0x00000200 /*!< Interrupt on TX */
-    BCM2837_BSC_C_INTD 	  = 0x00000100 /*!< Interrupt on DONE */
-    BCM2837_BSC_C_ST 	  = 0x00000080 /*!< Start transfer, 1 = Start a new transfer */
-    BCM2837_BSC_C_CLEAR_1 = 0x00000020 /*!< Clear FIFO Clear */
-    BCM2837_BSC_C_CLEAR_2 = 0x00000010 /*!< Clear FIFO Clear */
-    BCM2837_BSC_C_READ 	  = 0x00000001 /*!<	Read transfer */
+	/* Register masks for BSC_C */
+	BCM2837_BSC_C_I2CEN   = 0x00008000 /*!< I2C Enable, 0 = disabled, 1 = enabled */
+	BCM2837_BSC_C_INTR    = 0x00000400 /*!< Interrupt on RX */
+	BCM2837_BSC_C_INTT 	  = 0x00000200 /*!< Interrupt on TX */
+	BCM2837_BSC_C_INTD 	  = 0x00000100 /*!< Interrupt on DONE */
+	BCM2837_BSC_C_ST 	  = 0x00000080 /*!< Start transfer, 1 = Start a new transfer */
+	BCM2837_BSC_C_CLEAR_1 = 0x00000020 /*!< Clear FIFO Clear */
+	BCM2837_BSC_C_CLEAR_2 = 0x00000010 /*!< Clear FIFO Clear */
+	BCM2837_BSC_C_READ 	  = 0x00000001 /*!<	Read transfer */
 
-       /* Register masks for BSC_S */
-    BCM2837_BSC_S_CLKT 	=  0x00000200 /*!< Clock stretch timeout */
-    BCM2837_BSC_S_ERR 	=  0x00000100 /*!< ACK error */
-    BCM2837_BSC_S_RXF 	=  0x00000080 /*!< RXF FIFO full, 0 = FIFO is not full, 1 = FIFO is full */
-    BCM2837_BSC_S_TXE 	=  0x00000040 /*!< TXE FIFO full, 0 = FIFO is not full, 1 = FIFO is full */
-    BCM2837_BSC_S_RXD 	=  0x00000020 /*!< RXD FIFO contains data */
-    BCM2837_BSC_S_TXD 	=  0x00000010 /*!< TXD FIFO can accept data */
-    BCM2837_BSC_S_RXR 	=  0x00000008 /*!< RXR FIFO needs reading (full) */
-    BCM2837_BSC_S_TXW 	=  0x00000004 /*!< TXW FIFO needs writing (full) */
-    BCM2837_BSC_S_DONE 	=  0x00000002 /*!< Transfer DONE */
-    BCM2837_BSC_S_TA 	=  0x00000001 /*!< Transfer Active */
+	/* Register masks for BSC_S */
+	BCM2837_BSC_S_CLKT 	=  0x00000200 /*!< Clock stretch timeout */
+	BCM2837_BSC_S_ERR 	=  0x00000100 /*!< ACK error */
+	BCM2837_BSC_S_RXF 	=  0x00000080 /*!< RXF FIFO full, 0 = FIFO is not full, 1 = FIFO is full */
+	BCM2837_BSC_S_TXE 	=  0x00000040 /*!< TXE FIFO full, 0 = FIFO is not full, 1 = FIFO is full */
+	BCM2837_BSC_S_RXD 	=  0x00000020 /*!< RXD FIFO contains data */
+	BCM2837_BSC_S_TXD 	=  0x00000010 /*!< TXD FIFO can accept data */
+	BCM2837_BSC_S_RXR 	=  0x00000008 /*!< RXR FIFO needs reading (full) */
+	BCM2837_BSC_S_TXW 	=  0x00000004 /*!< TXW FIFO needs writing (full) */
+	BCM2837_BSC_S_DONE 	=  0x00000002 /*!< Transfer DONE */
+	BCM2837_BSC_S_TA 	=  0x00000001 /*!< Transfer Active */
 
-    BCM2837_BSC_FIFO_SIZE  = 	16 /*!< BSC FIFO size */
-	
+	BCM2837_BSC_FIFO_SIZE  = 	16 /*!< BSC FIFO size */
+
 	// i2c clock div
 	BCM2837_I2C_CLOCK_DIVIDER_2500   = 2500      /*!< 2500 = 10us = 100 kHz */
 	BCM2837_I2C_CLOCK_DIVIDER_626    = 626       /*!< 622 = 2.504us = 399.3610 kHz */
@@ -285,41 +285,41 @@ const(
 	BCM2837_I2C_REASON_ERROR_DATA  uint32  = 0x04      /*!< Not all data is sent / received */
 
 	//define for system timer
-    BCM2837_ST_CS  uint32  =   0x0000 /*!< System Timer Control/Status */
-    BCM2837_ST_CLO uint32  =   0x0004 /*!< System Timer Counter Lower 32 bits */
-    BCM2837_ST_CHI uint32  =   0x0008 /*!< System Timer Counter Upper 32 bits */
+	BCM2837_ST_CS  uint32  =   0x0000 /*!< System Timer Control/Status */
+	BCM2837_ST_CLO uint32  =   0x0004 /*!< System Timer Counter Lower 32 bits */
+	BCM2837_ST_CHI uint32  =   0x0008 /*!< System Timer Counter Upper 32 bits */
 
 	//define for pwm
-    BCM2837_PWM_CONTROL uint32 = (0*4)
-    BCM2837_PWM_STATUS  uint32 = (1*4)
-    BCM2837_PWM_DMAC    uint32 = (2*4)
-    BCM2837_PWM0_RANGE  uint32 = (4*4)
-    BCM2837_PWM0_DATA   uint32 = (5*4)
-    BCM2837_PWM_FIF1    uint32 = (6*4)
-    BCM2837_PWM1_RANGE  uint32 = (8*4)
-    BCM2837_PWM1_DATA   uint32 = (9*4)
+	BCM2837_PWM_CONTROL uint32 = (0*4)
+	BCM2837_PWM_STATUS  uint32 = (1*4)
+	BCM2837_PWM_DMAC    uint32 = (2*4)
+	BCM2837_PWM0_RANGE  uint32 = (4*4)
+	BCM2837_PWM0_DATA   uint32 = (5*4)
+	BCM2837_PWM_FIF1    uint32 = (6*4)
+	BCM2837_PWM1_RANGE  uint32 = (8*4)
+	BCM2837_PWM1_DATA   uint32 = (9*4)
 
-    /* Defines for PWM Clock, word offsets (ie 4 byte multiples) */
-    BCM2837_PWMCLK_CNTL uint32 =  (40 *4)
-    BCM2837_PWMCLK_DIV  uint32 =  (41 *4)
-    BCM2837_PWM_PASSWRD uint32 =  (0x5A << 24)  /*!< Password to enable setting PWM clock */
+	/* Defines for PWM Clock, word offsets (ie 4 byte multiples) */
+	BCM2837_PWMCLK_CNTL uint32 =  (40 *4)
+	BCM2837_PWMCLK_DIV  uint32 =  (41 *4)
+	BCM2837_PWM_PASSWRD uint32 =  (0x5A << 24)  /*!< Password to enable setting PWM clock */
 
-    BCM2837_PWM1_MS_MODE  uint32  =  0x8000  /*!< Run in Mark/Space mode */
-    BCM2837_PWM1_USEFIFO  uint32  =  0x2000  /*!< Data from FIFO */
-    BCM2837_PWM1_REVPOLAR uint32  =  0x1000  /*!< Reverse polarity */
-    BCM2837_PWM1_OFFSTATE uint32  =  0x0800  /*!< Ouput Off state */
-    BCM2837_PWM1_REPEATFF uint32  =  0x0400  /*!< Repeat last value if FIFO empty */
-    BCM2837_PWM1_SERIAL   uint32  =  0x0200  /*!< Run in serial mode */
-    BCM2837_PWM1_ENABLE   uint32  =  0x0100  /*!< Channel Enable */
+	BCM2837_PWM1_MS_MODE  uint32  =  0x8000  /*!< Run in Mark/Space mode */
+	BCM2837_PWM1_USEFIFO  uint32  =  0x2000  /*!< Data from FIFO */
+	BCM2837_PWM1_REVPOLAR uint32  =  0x1000  /*!< Reverse polarity */
+	BCM2837_PWM1_OFFSTATE uint32  =  0x0800  /*!< Ouput Off state */
+	BCM2837_PWM1_REPEATFF uint32  =  0x0400  /*!< Repeat last value if FIFO empty */
+	BCM2837_PWM1_SERIAL   uint32  =  0x0200  /*!< Run in serial mode */
+	BCM2837_PWM1_ENABLE   uint32  =  0x0100  /*!< Channel Enable */
 
-    BCM2837_PWM0_MS_MODE   uint32  =  0x0080  /*!< Run in Mark/Space mode */
-    BCM2837_PWM_CLEAR_FIFO uint32  =  0x0040  /*!< Clear FIFO */
-    BCM2837_PWM0_USEFIFO   uint32  =  0x0020  /*!< Data from FIFO */
-    BCM2837_PWM0_REVPOLAR  uint32  =  0x0010  /*!< Reverse polarity */
-    BCM2837_PWM0_OFFSTATE  uint32  =  0x0008  /*!< Ouput Off state */
-    BCM2837_PWM0_REPEATFF  uint32  =  0x0004  /*!< Repeat last value if FIFO empty */
-    BCM2837_PWM0_SERIAL    uint32  =  0x0002  /*!< Run in serial mode */
-    BCM2837_PWM0_ENABLE    uint32  =  0x0001  /*!< Channel Enable */
+	BCM2837_PWM0_MS_MODE   uint32  =  0x0080  /*!< Run in Mark/Space mode */
+	BCM2837_PWM_CLEAR_FIFO uint32  =  0x0040  /*!< Clear FIFO */
+	BCM2837_PWM0_USEFIFO   uint32  =  0x0020  /*!< Data from FIFO */
+	BCM2837_PWM0_REVPOLAR  uint32  =  0x0010  /*!< Reverse polarity */
+	BCM2837_PWM0_OFFSTATE  uint32  =  0x0008  /*!< Ouput Off state */
+	BCM2837_PWM0_REPEATFF  uint32  =  0x0004  /*!< Repeat last value if FIFO empty */
+	BCM2837_PWM0_SERIAL    uint32  =  0x0002  /*!< Run in serial mode */
+	BCM2837_PWM0_ENABLE    uint32  =  0x0001  /*!< Channel Enable */
 
 	//define for pwm clock div
 	BCM2837_PWM_CLOCK_DIVIDER_2048 uint32 = 2048    /*!< 2048 = 9.375kHz */
@@ -414,7 +414,7 @@ func Bcm2837_close()int{
 	Bcm2837_bsc1   =  0
 	Bcm2837_st     =  0
 
-	return 0 
+	return 0
 }
 
 /* PWM */
@@ -585,6 +585,36 @@ func Bcm2837_gpio_clr( pin uint8){
 	Bcm2837_peri_write(paddr, 1 << shift)
 }
 
+/* Set all output pins in the mask */
+func Bcm2837_gpio_set_multi(mask uint32){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPSET0
+	Bcm2837_peri_write(paddr,mask)
+}
+
+/* clear all output pins in the mask */
+func Bcm2837_gpio_clr_multi(mask uint32){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPCLR0
+	Bcm2837_peri_write(paddr,mask)
+}
+
+/* read input pin */
+func Bcm2837_gpio_lev(pin uint8)uint8{
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPLEV0 + uint32(pin/32)
+	var shift uint8  = pin%32
+	var val   uint32 = Bcm2837_peri_read(paddr)
+
+	if (val & (1<<shift)) != 0 {
+		return HIGH
+	}else {
+		return LOW
+	}
+}
+
+//TODO 2017.8.30 end next day need do read input pin function
+
+
+
+
 /* Set pullup/down */
 func Bcm2837_gpio_pud( pud uint8){
 	var paddr uint32 = Bcm2837_gpio + BCM2837_GPPUD
@@ -641,7 +671,7 @@ func main(){
 	if 0 != Bcm2837_init() {
 		Bcm2837_close()
 		panic(err)
-		return 
+		return
 	}
 
 	//test for pwm
