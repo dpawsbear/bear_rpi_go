@@ -8,5 +8,5 @@ this time will not work as library
 
 ## changelog:
 
-1. 2017.8.30 dpawsbear first add and test pwm and gpio
-2. 
+1. 2017.8.30 dpawsbear : first add and test pwm and gpio
+2. 2017.8.31 dpawsbear : try to change this as library
