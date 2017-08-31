@@ -1,4 +1,5 @@
-package bear_rpi_go
+//package bear_rpi_go
+package main
 
 import (
 	"os"
@@ -20,6 +21,7 @@ import (
    changelog :
    		2017.08.30 dpawsbear : first create
    		2017.08.31 dpawsbear : add interrupt function
+   		2017.08.31 dpawsbear : ready for package
 
 */
 
@@ -508,6 +510,27 @@ func Bcm2837_pwm_set_data( channel uint8,  data uint32){
 	}
 }
 
+//TODO 2017.08.31 ready for i2c
+
+func Bcm2837_i2c_begin()int32{
+	var div uint16
+
+	if (Bcm2837_bsc0 == 0)||(Bcm2837_bsc1 == 0){
+		panic(err)
+		return -1
+	}
+
+	/* Set the I2C/BSC1 pins to the Alt 0 function to enable I2C access on them */
+	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_03, BCM2837_GPIO_FSEL_ALT0) /* SDA */
+	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_05, BCM2837_GPIO_FSEL_ALT0) /* SCL */
+}
+
+
+
+
+
+
+
 
 /*
  *  read with memory form peripheral
@@ -855,10 +878,10 @@ func main(){
 	//}
 
 	//test for gpio
-	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_12,uint8(BCM2837_GPIO_FSEL_OUTP))
-	Bcm2837_gpio_set_pud(RPI_3B_GPIO_J8_12, BCM2837_GPIO_PUD_UP)
-	Bcm2837_gpio_set(RPI_3B_GPIO_J8_12)
-	time.Sleep(time.Second * 3)
-	Bcm2837_gpio_clr(RPI_3B_GPIO_J8_12)
+	//Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_12,uint8(BCM2837_GPIO_FSEL_OUTP))
+	//Bcm2837_gpio_set_pud(RPI_3B_GPIO_J8_12, BCM2837_GPIO_PUD_UP)
+	//Bcm2837_gpio_set(RPI_3B_GPIO_J8_12)
+	//time.Sleep(time.Second * 3)
+	//Bcm2837_gpio_clr(RPI_3B_GPIO_J8_12)
 
 }
