@@ -1,4 +1,4 @@
-package bear_go_rpi
+package bear_rpi_go
 
 import (
 	"os"
