@@ -513,7 +513,7 @@ func Bcm2837_pwm_set_data( channel uint8,  data uint32){
 //TODO 2017.08.31 ready for i2c
 var i2c_byte_wait_us uint32
 
-func Bcm2837_i2c_begin()int32{
+func Bcm2837_i2c_begin( )int32{
 	var div uint32
 
 	if (Bcm2837_bsc0 == 0)||(Bcm2837_bsc1 == 0){
@@ -521,7 +521,7 @@ func Bcm2837_i2c_begin()int32{
 		return -1
 	}
 
-	var paddr uint32 _ = Bcm2837_bsc1 + BCM2837_BSC_DIV;
+	var paddr uint32 = Bcm2837_bsc1 + BCM2837_BSC_DIV;
 	/* Set the I2C/BSC1 pins to the Alt 0 function to enable I2C access on them */
 	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_03, BCM2837_GPIO_FSEL_ALT0) /* SDA */
 	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_05, BCM2837_GPIO_FSEL_ALT0) /* SCL */
@@ -534,6 +534,8 @@ func Bcm2837_i2c_begin()int32{
 	// 9 = Clocks per byte : 8 bits + ACK
 	*/
 	i2c_byte_wait_us = uint32((float32(div) / BCM2837_CORE_CLK_HZ) * 1000000 * 9)
+
+	return 0
 }
 
 
