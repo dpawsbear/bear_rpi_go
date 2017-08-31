@@ -1,4 +1,4 @@
-package main
+package bear_go_rpi
 
 import (
 	"os"
@@ -18,7 +18,8 @@ import (
    Copyright (C) 2017-2018 dpawsbear
 
    changelog :
-   		2017.8.30 dpawsbear first create
+   		2017.08.30 dpawsbear : first create
+   		2017.08.31 dpawsbear : add interrupt function
 
 */
 
@@ -529,7 +530,7 @@ func Bcm2837_peri_write(paddr,value uint32){
 /* Set/clear only the bits in value covered by the mask
  * This is not atomic - can be interrupted.
  */
-func Bcm2837_per_set_bits( paddr,value,mask uint32){
+func Bcm2837_peri_set_bits( paddr,value,mask uint32){
 
 	var v uint32 = Bcm2837_peri_read(paddr)
 	v = (v & ^mask) | (value & mask) //TODO maybe wrong
@@ -568,7 +569,7 @@ func Bcm2837_gpio_fsel(pin,mode uint8){
 	var mask  uint32 = BCM2837_GPIO_FSEL_MASK << shift
 	var val   uint32 = (uint32(mode))<< shift
 	fmt.Printf("address: 0x%x val: 0x%x \n",paddr,val)
-	Bcm2837_per_set_bits(paddr,val,mask)
+	Bcm2837_peri_set_bits(paddr,val,mask)
 }
 
 /* Set output pin */
@@ -610,9 +611,154 @@ func Bcm2837_gpio_lev(pin uint8)uint8{
 	}
 }
 
-//TODO 2017.8.30 end next day need do read input pin function
+/* See if an event detection bit is set
+// Sigh can't support interrupts yet
+*/
+func Bcm2837_gpio_eds( pin uint8) uint8{
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPEDS0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = Bcm2837_peri_read(paddr)
+
+	if(value & (1<<shift)) != 0 {
+		return HIGH
+	}else {
+		return LOW
+	}
+}
+
+func Bcm2837_gpio_eds_multi( mask uint32) uint32{
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPEDS0
+	var value uint32  = Bcm2837_peri_read(paddr)
+	return (value & mask)
+}
+
+/* Write a 1 to clear the bit in EDS */
+func Bcm2837_gpio_set_eds(pin uint8){
+	var paddr uint32 =  Bcm2837_gpio + BCM2837_GPEDS0 + uint32(pin/32)
+	var shift uint8  =  pin % 32
+	var value uint32 =  1 << shift
+	Bcm2837_peri_write(paddr, value)
+}
 
 
+func Bcm2837_gpio_set_eds_multi(mask uint32) {
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPEDS0
+	Bcm2837_peri_write(paddr, mask)
+}
+
+/* Rising edge detect enable */
+func Bcm2837_gpio_ren( pin uint8 ){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPREN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+func Bcm2837_gpio_clr_ren( pin uint8){
+
+	var paddr  uint32 =  Bcm2837_gpio + BCM2837_GPREN0 + uint32(pin/32)
+	var shift  uint8  =  pin % 32
+	var value  uint32 =  1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+/* Falling edge detect enable */
+func Bcm2837_gpio_fen(pin uint8){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPFEN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+
+func Bcm2837_gpio_clr_fen(pin uint8){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPFEN0 + uint32(pin/32)
+	var shift uint8  = pin % 32
+	var value uint32 = 1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+/* High detect enable */
+func Bcm2837_gpio_hen( pin uint8){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPHEN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+
+func Bcm2837_gpio_clr_hen( pin uint8){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPHEN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+/* Low detect enable */
+func Bcm2837_gpio_len(pin uint8){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPLEN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+
+func Bcm2837_gpio_clr_len(pin uint8){
+	var paddr uint32  = Bcm2837_gpio + BCM2837_GPLEN0 + uint32(pin/32)
+	var shift uint8   = pin % 32
+	var value uint32  = 1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+/* Async rising edge detect enable */
+func Bcm2837_gpio_aren(pin uint8){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPAREN0 + uint32(pin/32)
+	var shift uint8  = pin % 32
+	var value uint32 = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+func Bcm2837_gpio_clr_aren(pin uint8){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPAREN0 + uint32(pin/32)
+	var shift uint8  = pin % 32
+	var value uint32 = 1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+/* Async falling edge detect enable */
+func Bcm2837_gpio_afen(pin uint8){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPAFEN0 + uint32(pin/32)
+	var shift uint8  = pin % 32
+	var value uint32 = 1 << shift
+	Bcm2837_peri_set_bits(paddr, value, value)
+}
+func Bcm2837_gpio_clr_afen( pin uint8){
+	var paddr uint32 = Bcm2837_gpio + BCM2837_GPAFEN0 + uint32(pin/32)
+	var shift uint8  = pin % 32
+	var value uint32 = 1 << shift
+	Bcm2837_peri_set_bits(paddr, 0, value)
+}
+
+
+
+/* Read GPIO pad behaviour for groups of GPIOs */
+func Bcm2837_gpio_pad( group uint8) uint32 {
+	if Bcm2837_pads == 0 {
+		panic(err)
+		return 0
+	}
+
+	var paddr uint32 = Bcm2837_pads + BCM2837_PADS_GPIO_0_27 + uint32(group)
+	return Bcm2837_peri_read(paddr)
+}
+
+/* Set GPIO pad behaviour for groups of GPIOs
+// powerup value for all pads is
+// BCM2835_PAD_SLEW_RATE_UNLIMITED | BCM2835_PAD_HYSTERESIS_ENABLED | BCM2835_PAD_DRIVE_8mA
+*/
+func Bcm2837_gpio_set_pad(group uint8 , control uint32){
+	if Bcm2837_pads == 0{
+		panic(err)
+		return
+	}
+	var paddr uint32  = Bcm2837_pads + BCM2837_PADS_GPIO_0_27 + uint32(group)
+	Bcm2837_peri_write( paddr , control | BCM2837_PAD_PASSWRD)
+}
 
 
 /* Set pullup/down */
@@ -624,15 +770,16 @@ func Bcm2837_gpio_pud( pud uint8){
 /* Pullup/down clock
 // Clocks the value of pud into the GPIO pin
 */
-func Bcm2837_gpio_pudclk(pin,on uint8){
-	var paddr uint32 = Bcm2837_gpio + BCM2837_GPPUDCLK0 + uint32(pin/32)
-	var shift uint8  = pin % 32
-	var mask  uint32  = 0
+func Bcm2837_gpio_pudclk( pin,on uint8) {
+	var paddr  uint32 = Bcm2837_gpio + BCM2837_GPPUDCLK0 + uint32(pin/32)
+	var shift  uint8  = pin % 32
+	var value  uint32 = 0
 	if on != 0 {
-		mask = 1
+		value = 1
 	}
-	Bcm2837_peri_write(paddr, mask << shift)
+	Bcm2837_peri_write(paddr, value << shift)
 }
+
 
 
 /* Set the pullup/down resistor for a pin
