@@ -1,5 +1,5 @@
-//package bear_rpi_go
-package main
+package bear_rpi_go
+//package main
 
 import (
 	"os"
