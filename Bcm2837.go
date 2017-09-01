@@ -22,6 +22,7 @@ import (
    		2017.08.30 dpawsbear : first create
    		2017.08.31 dpawsbear : add interrupt function
    		2017.08.31 dpawsbear : ready for package
+   		2017.09.01 dpawsbear : start to write i2c drivers (not test)
 
 */
 
@@ -510,7 +511,7 @@ func Bcm2837_pwm_set_data( channel uint8,  data uint32){
 	}
 }
 
-//TODO 2017.08.31 ready for i2c
+
 var i2c_byte_wait_us uint32
 
 func Bcm2837_i2c_begin( )int32{
@@ -533,12 +534,68 @@ func Bcm2837_i2c_begin( )int32{
 	// 1000000 = micros seconds in a second
 	// 9 = Clocks per byte : 8 bits + ACK
 	*/
-	i2c_byte_wait_us = uint32((float32(div) / BCM2837_CORE_CLK_HZ) * 1000000 * 9)
+	i2c_byte_wait_us = uint32((float32(div) / BCM2837_CORE_CLK_HZ) * 1000000 * 9) //TODO this may wrong
 
 	return 0
 }
 
+func Bcm2837_i2c_end(){
+	/* Set all the I2C/BSC1 pins back to input */
+	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_03, BCM2837_GPIO_FSEL_INPT); /* SDA */
+	Bcm2837_gpio_fsel(RPI_3B_GPIO_J8_05, BCM2837_GPIO_FSEL_INPT); /* SCL */
+}
 
+func Bcm2837_i2c_setSlaveAddress(addr uint8) {
+	/* Set I2C Device Address */
+	var paddr uint32  = Bcm2837_bsc1 + BCM2837_BSC_A
+
+	Bcm2837_peri_write(paddr, uint32(addr))
+}
+
+func Bcm2837_i2c_setClockDivider(div uint32){
+	var paddr uint32 = Bcm2837_bsc1 + BCM2837_BSC_DIV
+
+	Bcm2837_peri_write(paddr,div)
+	/* Calculate time for transmitting one byte
+    // 1000000 = micros seconds in a second
+    // 9 = Clocks per byte : 8 bits + ACK
+    */
+	i2c_byte_wait_us = uint32((float32(div) / BCM2837_CORE_CLK_HZ) * 1000000 * 9)
+}
+
+
+/* set I2C clock divider by means of a baudrate number */
+func Bcm2837_i2c_set_baudrate(baudrate uint32) {
+	var divider uint32
+	/* use 0xFFFE mask to limit a max value and round down any odd number */
+	divider = (BCM2837_CORE_CLK_HZ / baudrate) & 0xFFFE
+	Bcm2837_i2c_setClockDivider( uint32(divider ))
+}
+
+//TODO 2017.09.01 ready for i2c write
+//func Bcm2837_i2c_write(buf *[]byte ,len uint32){
+//	/* i2c 1*/
+//	var dlen uint32  = Bcm2837_bsc1 + BCM2837_BSC_DLEN
+//	var fifo uint32  = Bcm2837_bsc1 + BCM2837_BSC_FIFO
+//	var stat uint32  = Bcm2837_bsc1 + BCM2837_BSC_S
+//	var ctrl uint32  = Bcm2837_bsc1 + BCM2837_BSC_C
+//
+//	var remain uint32 = len
+//	var iCnt   uint32 = 0
+//	var reason uint32 = BCM2837_I2C_REASON_OK
+//
+//	/* Clear FIFO */
+//	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
+//	/* Clear Status */
+//	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE)
+//	/* Set Data Length */
+//	Bcm2837_peri_write(dlen, len)
+//	/* pre populate FIFO with max buffer */
+//	for 0 != (remain && uint32( iCnt < BCM2837_BSC_FIFO_SIZE)  ){
+//		Bcm2837_peri_write(fifo,buf[0])
+//
+//	}
+//}
 
 
 /*
@@ -578,7 +635,7 @@ func Bcm2837_peri_set_bits( paddr,value,mask uint32){
 
 /* Function select
 // pin is a BCM2835 GPIO pin number NOT RPi pin number
-//      There are 6 control registers, each control the functions of a block
+//      There are 6 control registers, each control the function0s of a block
 //      of 10 pins.
 //      Each control register has 10 sets of 3 bits per GPIO pin:
 //
