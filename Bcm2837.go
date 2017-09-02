@@ -573,31 +573,119 @@ func Bcm2837_i2c_set_baudrate(baudrate uint32) {
 }
 
 //TODO 2017.09.01 ready for i2c write
-//func Bcm2837_i2c_write(buf *[]byte ,len uint32){
-//	/* i2c 1*/
-//	var dlen uint32  = Bcm2837_bsc1 + BCM2837_BSC_DLEN
-//	var fifo uint32  = Bcm2837_bsc1 + BCM2837_BSC_FIFO
-//	var stat uint32  = Bcm2837_bsc1 + BCM2837_BSC_S
-//	var ctrl uint32  = Bcm2837_bsc1 + BCM2837_BSC_C
-//
-//	var remain uint32 = len
-//	var iCnt   uint32 = 0
-//	var reason uint32 = BCM2837_I2C_REASON_OK
-//
-//	/* Clear FIFO */
-//	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
-//	/* Clear Status */
-//	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE)
-//	/* Set Data Length */
-//	Bcm2837_peri_write(dlen, len)
-//	/* pre populate FIFO with max buffer */
-//	for 0 != (remain && uint32( iCnt < BCM2837_BSC_FIFO_SIZE)  ){
-//		Bcm2837_peri_write(fifo,buf[0])
-//
-//	}
-//}
+func Bcm2837_i2c_write(buf []byte ,len uint32) uint32 {
+	/* i2c 1*/
+	var dlen uint32  = Bcm2837_bsc1 + BCM2837_BSC_DLEN
+	var fifo uint32  = Bcm2837_bsc1 + BCM2837_BSC_FIFO
+	var stat uint32  = Bcm2837_bsc1 + BCM2837_BSC_S
+	var ctrl uint32  = Bcm2837_bsc1 + BCM2837_BSC_C
+
+	var remain uint32 = len
+	var iCnt   uint32 = 0
+	var reason uint32 = BCM2837_I2C_REASON_OK
+
+	/* Clear FIFO */
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
+	/* Clear Status */
+	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE)
+	/* Set Data Length */
+	Bcm2837_peri_write(dlen, len)
+	/* pre populate FIFO with max buffer */
+	for false !=  ( 0 != remain) && ( iCnt < BCM2837_BSC_FIFO_SIZE)  {
+		Bcm2837_peri_write(fifo,uint32(buf[iCnt]))
+		iCnt ++
+		remain --
+	}
+
+	/* Enable device and start transfer */
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST)
+
+	/* Transfer is over when BCM2835_BSC_S_DONE */
+	for 0 == (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE ) {
+		for false !=  ( (0 != remain) && (0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_TXD ))){
+			/* Write to FIFO */
+			Bcm2837_peri_write(fifo, uint32(buf[iCnt]))
+			iCnt++
+			remain--
+		}
+	}
+
+	/* Received a NACK */
+	if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_ERR ){
+		reason = BCM2837_I2C_REASON_ERROR_NACK
+	} else if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_CLKT) {
+		/* Received Clock Stretch Timeout */
+		reason = BCM2837_I2C_REASON_ERROR_CLKT
+	}else if 0 != remain {
+		/* Not all data is sent */
+		reason = BCM2837_I2C_REASON_ERROR_DATA
+	}
+
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_S_DONE , BCM2837_BSC_S_DONE)
+
+	return reason
+}
 
 
+/* Read an number of bytes from I2C */
+func Bcm2837_i2c_read(buf []byte ,  len uint32)byte{
+
+	var dlen uint32   = Bcm2837_bsc1 + BCM2837_BSC_DLEN
+	var fifo uint32   = Bcm2837_bsc1 + BCM2837_BSC_FIFO
+	var stat uint32   = Bcm2837_bsc1 + BCM2837_BSC_S
+	var ctrl uint32   = Bcm2837_bsc1 + BCM2837_BSC_C
+
+
+	var remain uint32 = len
+	var iCnt   uint32 = 0
+	var reason uint32 = BCM2837_I2C_REASON_OK
+
+	/* Clear FIFO */
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
+	/* Clear Status */
+	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE);
+	/* Set Data Length */
+	Bcm2837_peri_write(dlen, len)
+	/* Start read */
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST | BCM2837_BSC_C_READ);
+
+	/* wait for transfer to complete */
+	for 0 == (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE){
+		/* we must empty the FIFO as it is populated and not use any delay */
+		for 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_RXD){
+			/* Read from FIFO, no barrier */
+			buf[iCnt] = byte(Bcm2837_peri_read(fifo))
+			iCnt++
+			remain--
+		}
+	}
+
+	/* transfer has finished - grab any remaining stuff in FIFO */
+	for false != ((0 != remain) && (0!=(Bcm2837_peri_read(stat) & BCM2837_BSC_S_RXD))){
+		/* Read from FIFO, no barrier */
+		buf[iCnt] = byte(Bcm2837_peri_read(fifo))
+		iCnt++
+		remain--
+	}
+
+	/* Received a NACK */
+	if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_ERR) {
+		reason = BCM2837_I2C_REASON_ERROR_NACK
+	}else if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_CLKT){
+		/* Received Clock Stretch Timeout */
+		reason = BCM2837_I2C_REASON_ERROR_CLKT
+	}else if 0 != remain {
+		/* Not all data is received */
+		reason = BCM2837_I2C_REASON_ERROR_DATA
+	}
+
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_S_DONE , BCM2837_BSC_S_DONE)
+
+	return byte(reason)
+}
+
+
+   
 /*
  *  read with memory form peripheral
  */
