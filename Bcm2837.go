@@ -514,7 +514,7 @@ func Bcm2837_pwm_set_data( channel uint8,  data uint32){
 
 var i2c_byte_wait_us uint32
 
-func Bcm2837_i2c_begin( )int32{
+func Bcm2837_i2c_begin( )uint32{
 	var div uint32
 
 	if (Bcm2837_bsc0 == 0)||(Bcm2837_bsc1 == 0){
@@ -643,11 +643,11 @@ func Bcm2837_i2c_read(buf []byte ,  len uint32)byte{
 	/* Clear FIFO */
 	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
 	/* Clear Status */
-	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE);
+	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE)
 	/* Set Data Length */
 	Bcm2837_peri_write(dlen, len)
 	/* Start read */
-	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST | BCM2837_BSC_C_READ);
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST | BCM2837_BSC_C_READ)
 
 	/* wait for transfer to complete */
 	for 0 == (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE){
@@ -683,6 +683,97 @@ func Bcm2837_i2c_read(buf []byte ,  len uint32)byte{
 
 	return byte(reason)
 }
+
+/* Read an number of bytes from I2C sending a repeated start after writing
+// the required register. Only works if your device supports this mode
+*/
+func Bcm2837_i2c_read_register_rs( regaddr, buf []byte ,  len uint32)uint8 {
+
+
+	var dlen uint32 = Bcm2837_bsc1 + BCM2837_BSC_DLEN
+	var fifo uint32 = Bcm2837_bsc1 + BCM2837_BSC_FIFO
+	var stat uint32 = Bcm2837_bsc1 + BCM2837_BSC_S
+	var ctrl uint32 = Bcm2837_bsc1 + BCM2837_BSC_C
+
+	var remain uint32  = len
+	var iCnt   uint32  = 0
+	var reason uint32  = BCM2837_I2C_REASON_OK
+
+	/* Clear FIFO */
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_C_CLEAR_1 , BCM2837_BSC_C_CLEAR_1 )
+	/* Clear Status */
+	Bcm2837_peri_write(stat, BCM2837_BSC_S_CLKT | BCM2837_BSC_S_ERR | BCM2837_BSC_S_DONE)
+	/* Set Data Length */
+	Bcm2837_peri_write(dlen, 1)
+	/* Enable device and start transfer */
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN)
+	Bcm2837_peri_write(fifo, uint32(regaddr[0]))
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST)
+
+	/* poll for transfer has started */
+	for 0 == ( Bcm2837_peri_read(stat) & BCM2837_BSC_S_TA ){
+		if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE){
+			break
+		}
+	}
+
+
+	/* Send a repeated start with read bit set in address */
+	Bcm2837_peri_write(dlen, len)
+	Bcm2837_peri_write(ctrl, BCM2837_BSC_C_I2CEN | BCM2837_BSC_C_ST  | BCM2837_BSC_C_READ )
+
+	/* Wait for write to complete and first byte back. */
+
+	time.Sleep(time.Microsecond * 6) //TODO this time maybe wrong
+	//Bcm2837_delayMicroseconds(i2c_byte_wait_us * 3)
+
+	/* wait for transfer to complete */
+	for 0 == (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE){
+		for false != ( (0 != remain) && bool( Bcm2837_peri_read(stat) & BCM2837_BSC_S_RXD)){
+			buf[iCnt] = byte(Bcm2837_peri_read(fifo))
+			iCnt ++
+			remain --
+		}
+	}
+
+	for 0 == (Bcm2837_peri_read(stat) & BCM2837_BSC_S_DONE){
+
+		/* we must empty the FIFO as it is populated and not use any delay */
+		for false !=  ( (0 != remain) && bool(Bcm2837_peri_read(stat) & BCM2837_BSC_S_RXD)){
+			/* Read from FIFO */
+			buf[iCnt] = byte(Bcm2837_peri_read(fifo))
+			iCnt++
+			remain--
+		}
+	}
+
+	/* transfer has finished - grab any remaining stuff in FIFO */
+	for false !=  ((0 != remain) && bool(Bcm2837_peri_read(stat) & BCM2837_BSC_S_RXD)){
+		/* Read from FIFO */
+		buf[iCnt] = byte(Bcm2837_peri_read(fifo))
+		iCnt++
+		remain --
+	}
+
+	/* Received a NACK */
+	if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_ERR) {
+		reason = BCM2837_I2C_REASON_ERROR_NACK
+	}else if 0 != (Bcm2837_peri_read(stat) & BCM2837_BSC_S_CLKT){
+		/* Received Clock Stretch Timeout */
+		reason = BCM2837_I2C_REASON_ERROR_CLKT
+	}else if 0 != (remain){
+		/* Not all data is sent */
+		reason = BCM2837_I2C_REASON_ERROR_DATA
+	}
+
+	Bcm2837_peri_set_bits(ctrl, BCM2837_BSC_S_DONE , BCM2837_BSC_S_DONE)
+
+	return uint8(reason)
+}
+
+
+
+
 
 
    
@@ -1039,5 +1130,19 @@ func main(){
 	//Bcm2837_gpio_clr(RPI_3B_GPIO_J8_12)
 
 	//test for i2c
+
+	err := Bcm2837_i2c_begin()
+	if err != 0 {
+		fmt.Println("Bcm2837_i2c_begin failed")
+	}
+	var slave_addr uint8  = 0x37
+	var clk_div    uint32 = BCM2837_I2C_CLOCK_DIVIDER_148
+	Bcm2837_i2c_setSlaveAddress(slave_addr)
+
+	Bcm2837_i2c_setClockDivider(clk_div)
+
+	//try read
+
+
 
 }
